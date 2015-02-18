@@ -1,0 +1,12 @@
+{
+  "name": "ssl-manager",
+  "version": "1.0.0",
+  "description": "Manage your ssl certificates",
+  "main": "index.js",
+  "author": "kumpelblase2",
+  "license": "MIT",
+  "dependencies": {
+    "minimist": "^1.1.0",
+    "rimraf": "^2.2.8"
+  }
+}
