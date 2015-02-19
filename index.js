@@ -1,10 +1,5 @@
 var args = require('minimist')(process.argv.slice(2));
-var fs = require('fs');
-var path = require('path');
-var dirs = require('./dirs');
-var sys = require('sys')
-var exec = require('child_process').exec;
-var rmdir = require('rimraf');
+var manager = require('./manager');
 
 switch(args._[0]) {
     case "cert":
@@ -20,16 +15,7 @@ switch(args._[0]) {
 function handleCert(command, args) {
     switch(command) {
         case "list":
-            fs.readdir(dirs.casDir(), function(err, files) {
-                if(!err && files && files.length > 0) {
-                    console.log('Available certificates:');
-                    files.forEach(function(cert) {
-                        console.log('\t' + cert);
-                    });
-                } else {
-                    console.log('Could not find any certificates.');
-                }
-            });
+            manager.listCerts();
             break;
         case "create":
             if(!args.cn) {
@@ -43,28 +29,7 @@ function handleCert(command, args) {
                 return;
             }
 
-            dirs.checkMainDir();
-            var certDir = path.join(dirs.certsDir(), args.name);
-            if(fs.existsSync(certDir)) {
-                console.error("Such a certificate already exists.");
-                return;
-            }
-
-            var keyFile = path.join(certDir, 'certificate.key');
-            var reqFile = path.join(certDir, 'certificate.req');
-            var cerFile = path.join(certDir, 'certificate.cer');
-            var serialFile = path.join(certDir, 'serial');
-            var caDir = path.join(dirs.casDir(), args.ca);
-            var caKeyFile = path.join(caDir, 'authority.key');
-            var caCertFile = path.join(caDir, 'authority.cer');
-            fs.mkdirSync(certDir);
-            exec('openssl genrsa -out ' + keyFile + ' 2048', function(err) {
-                exec('openssl req -new -key ' + keyFile + ' -out ' + reqFile + ' -subj /CN="' + args.cn + '"', function(err) {
-                    exec('openssl x509 -req -in ' + reqFile + ' -out ' + cerFile + ' -CAkey ' + caKeyFile + ' -CA ' + caCertFile + ' -days 365 -CAcreateserial -CAserial ' + serialFile, function(err) {
-                        console.log("Created certificate " + args.name);
-                    });
-                });
-            });
+            manager.createCert(args.cn, args.name, args.ca);
             break;
         case "delete":
             if(!args.name) {
@@ -72,16 +37,7 @@ function handleCert(command, args) {
                 return;
             }
 
-            var certDir = path.join(dirs.certsDir(), args.name);
-            rmdir(certDir, function(err) {
-                if(err) {
-                    console.error("Issue removing cert:");
-                    console.error(err);
-                } else {
-                    console.log("Removed cert " + args.name);
-                }
-            });
-            break;
+            manager.deleteCert(args.name);
             break;
         default:
             console.log("Available commands: ");
@@ -93,16 +49,7 @@ function handleCert(command, args) {
 function handleAuthority(command, args) {
     switch(command) {
         case "list":
-            fs.readdir(dirs.casDir(), function(err, files) {
-                if(!err && files && files.length > 0) {
-                    console.log('Available Authorities:');
-                    files.forEach(function(ca) {
-                        console.log('\t' + ca);
-                    });
-                } else {
-                    console.log('Could not find any authorities.');
-                }
-            });
+            manager.listAuthorities();
             break;
         case "create":
             if(!args.cn) {
@@ -113,21 +60,7 @@ function handleAuthority(command, args) {
                 return;
             }
 
-            dirs.checkMainDir();
-            var caDir = path.join(dirs.casDir(), args.name);
-            if(fs.existsSync(caDir)) {
-                console.error("Such an authority already exists.");
-                return;
-            }
-
-            var keyFile = path.join(caDir, 'authority.key');
-            var cerFile = path.join(caDir, 'authority.cer');
-            fs.mkdirSync(caDir);
-            exec('openssl genrsa -out ' + keyFile + ' 2048', function(err) {
-                exec('openssl req -x509 -new -key ' + keyFile + ' -out ' + cerFile + ' -days 730 -subj /CN="' + args.cn + '"', function(err) {
-                    console.log("Created authority " + args.name);
-                });
-            });
+            manager.createAuthority(args.cn, args.name);
             break;
         case "delete":
             if(!args.name) {
@@ -135,15 +68,7 @@ function handleAuthority(command, args) {
                 return;
             }
 
-            var caDir = path.join(dirs.casDir(), args.name);
-            rmdir(caDir, function(err) {
-                if(err) {
-                    console.error("Issue removing authority:");
-                    console.error(err);
-                } else {
-                    console.log("Removed authority " + args.name);
-                }
-            });
+            manager.deleteAuthority(args.name);
             break;
         default:
             console.log("Available subcommands: ");
