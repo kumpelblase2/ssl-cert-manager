@@ -18,11 +18,11 @@ CertManager.prototype.checkMainDir = function() {
         return true;
     }
 
-    if(!fs.existsSync(this.caDir) {
+    if(!fs.existsSync(this.caDir)) {
         fs.mkdirSync(this.caDir);
     }
 
-    if(!fs.existsSync(this.certDir) {
+    if(!fs.existsSync(this.certDir)) {
         fs.mkdirSync(this.certDir);
     }
 

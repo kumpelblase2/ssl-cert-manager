@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 
 var main = require('../index');
-main.run(process.argv.slice(1));
+main.run(process.argv.slice(2));
