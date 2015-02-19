@@ -1,14 +1,36 @@
 var fs = require('fs');
 var path = require('path');
-var dirs = require('./dirs');
 var sys = require('sys')
 var exec = require('child_process').exec;
 var rmdir = require('rimraf');
 
-var CertManager = {};
+function CertManager = function(inBaseDir) {
+    this.baseDir = inBaseDir || path.join(process.env['HOME'], '.certs');
+    this.caDir = path.join(this.baseDir, 'ca');
+    this.certDir = path.join(this.baseDir, 'cert');
+};
 
-CertManager.listAuthorities = function() {
-    fs.readdir(dirs.casDir(), function(err, files) {
+CertManager.prototype.checkMainDir = function() {
+    if(!fs.existsSync(this.baseDir)) {
+        fs.mkdirSync(this.baseDir);
+        fs.mkdirSync(this.caDir);
+        fs.mkdirSync(this.certDir);
+        return true;
+    }
+    
+    if(!fs.existsSync(this.caDir) {
+        fs.mkdirSync(this.caDir);
+    }
+    
+    if(!fs.existsSync(this.certDir) {
+        fs.mkdirSync(this.certDir);
+    }
+    
+    return true;
+};
+
+CertManager.prototype.listAuthorities = function() {
+    fs.readdir(this.caDir, function(err, files) {
         if(!err && files && files.length > 0) {
             console.log('Available Authorities:');
             files.forEach(function(ca) {
@@ -20,9 +42,9 @@ CertManager.listAuthorities = function() {
     });
 };
 
-CertManager.createAuthority = function(inCN, inName) {
-    dirs.checkMainDir();
-    var caDir = path.join(dirs.casDir(), inName);
+CertManager.prototype.createAuthority = function(inCN, inName) {
+    this.checkMainDir();
+    var caDir = path.join(this.caDir, inName);
     if(fs.existsSync(caDir)) {
         console.error("Such an authority already exists.");
         return;
@@ -37,8 +59,8 @@ CertManager.createAuthority = function(inCN, inName) {
     });
 };
 
-CertManager.deleteAuthority = function(inName) {
-    var caDir = path.join(dirs.casDir(), inName);
+CertManager.prototype.deleteAuthority = function(inName) {
+    var caDir = path.join(this.caDir, inName);
     rmdir(caDir, function(err) {
         if(err) {
             console.error("Issue removing authority:");
@@ -50,8 +72,8 @@ CertManager.deleteAuthority = function(inName) {
 };
 
 
-CertManager.listCerts = function() {
-    fs.readdir(dirs.casDir(), function(err, files) {
+CertManager.prototype.listCerts = function() {
+    fs.readdir(this.caDir, function(err, files) {
         if(!err && files && files.length > 0) {
             console.log('Available certificates:');
             files.forEach(function(cert) {
@@ -63,9 +85,9 @@ CertManager.listCerts = function() {
     });
 };
 
-CertManager.createCert = function(inCN, inName, inCA) {
-    dirs.checkMainDir();
-    var certDir = path.join(dirs.certsDir(), inName);
+CertManager.prototype.createCert = function(inCN, inName, inCA) {
+    this.checkMainDir();
+    var certDir = path.join(this.certDir, inName);
     if(fs.existsSync(certDir)) {
         console.error("Such a certificate already exists.");
         return;
@@ -74,7 +96,7 @@ CertManager.createCert = function(inCN, inName, inCA) {
     var reqFile = path.join(certDir, 'certificate.req');
     var cerFile = path.join(certDir, 'certificate.cer');
     var serialFile = path.join(certDir, 'serial');
-    var caDir = path.join(dirs.casDir(), inCA);
+    var caDir = path.join(this.caDir, inCA);
     var caKeyFile = path.join(caDir, 'authority.key');
     var caCertFile = path.join(caDir, 'authority.cer');
     fs.mkdirSync(certDir);
@@ -87,8 +109,8 @@ CertManager.createCert = function(inCN, inName, inCA) {
     });
 };
 
-CertManager.deleteCert = function(inName) {
-    var certDir = path.join(dirs.certsDir(), inName);
+CertManager.prototype.deleteCert = function(inName) {
+    var certDir = path.join(this.certDir, inName);
     rmdir(certDir, function(err) {
         if(err) {
             console.error("Issue removing cert:");
