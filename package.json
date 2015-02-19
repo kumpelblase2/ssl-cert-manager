@@ -5,7 +5,7 @@
   "main": "index.js",
   "bin": {
     "ssl-manager": "./bin/ssl-manager"
-  }
+  },
   "author": "kumpelblase2",
   "license": "MIT",
   "dependencies": {
