@@ -1,5 +1,6 @@
 var args = require('minimist')(process.argv.slice(2));
-var manager = require('./manager');
+var Manager = require('./manager');
+var manager = new Manager();
 
 switch(args._[0]) {
     case "cert":
