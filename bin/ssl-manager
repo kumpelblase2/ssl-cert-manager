@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 
-var main = require('../index);
+var main = require('../index');
 main.run(process.args);
