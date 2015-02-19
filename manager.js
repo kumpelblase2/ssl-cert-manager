@@ -4,7 +4,7 @@ var sys = require('sys')
 var exec = require('child_process').exec;
 var rmdir = require('rimraf');
 
-function CertManager = function(inBaseDir) {
+function CertManager(inBaseDir) {
     this.baseDir = inBaseDir || path.join(process.env['HOME'], '.certs');
     this.caDir = path.join(this.baseDir, 'ca');
     this.certDir = path.join(this.baseDir, 'cert');
@@ -17,15 +17,15 @@ CertManager.prototype.checkMainDir = function() {
         fs.mkdirSync(this.certDir);
         return true;
     }
-    
+
     if(!fs.existsSync(this.caDir) {
         fs.mkdirSync(this.caDir);
     }
-    
+
     if(!fs.existsSync(this.certDir) {
         fs.mkdirSync(this.certDir);
     }
-    
+
     return true;
 };
 
