@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Manage your ssl certificates",
   "main": "index.js",
+  "repository": "https://github.com/kumpelblase2/ssl-cert-manager",
+  "bin": {
+    "ssl-manager": "./bin/ssl-manager"
+  },
   "author": "kumpelblase2",
   "license": "MIT",
   "dependencies": {

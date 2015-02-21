@@ -1,15 +1,18 @@
-var args = require('minimist')(process.argv.slice(2));
-var manager = require('./manager');
+var Manager = require('./manager');
+var manager = new Manager();
 
-switch(args._[0]) {
-    case "cert":
-        handleCert(args._[1], args);
-        break;
-    case "ca":
-        handleAuthority(args._[1], args);
-        break;
-    default:
-        break;
+function run(inArgs) {
+    var args = require('minimist')(inArgs);
+    switch(args._[0]) {
+        case "cert":
+            handleCert(args._[1], args);
+            break;
+        case "ca":
+            handleAuthority(args._[1], args);
+            break;
+        default:
+            break;
+    }
 }
 
 function handleCert(command, args) {
@@ -76,3 +79,5 @@ function handleAuthority(command, args) {
             break;
     }
 }
+
+module.exports.run = run;
