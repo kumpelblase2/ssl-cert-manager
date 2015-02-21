@@ -45,7 +45,7 @@ npm install -g ssl-manager
 You may want to omit `-g` if you don't want to install it in the global namespace.
 
 ## Uninstall
-````
+```
 npm uninstall -g ssl-manager
 ```
 To also remove all the authorities and certificates created by this tool, just delete the `.certs` directory inside you home directory.
