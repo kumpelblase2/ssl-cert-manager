@@ -49,8 +49,8 @@ CertManager.prototype.createAuthority = function(inCN, inName) {
         console.error("Such an authority already exists.");
         return;
     }
-    var keyFile = path.join(caDir, 'authority.key');
-    var cerFile = path.join(caDir, 'authority.cer');
+    var keyFile = path.join(caDir, inName + '.key');
+    var cerFile = path.join(caDir, inName + '.cer');
     fs.mkdirSync(caDir);
     exec('openssl genrsa -out ' + keyFile + ' 2048', function(err) {
         exec('openssl req -x509 -new -key ' + keyFile + ' -out ' + cerFile + ' -days 730 -subj /CN="' + inCN + '"', function(err) {
@@ -92,13 +92,13 @@ CertManager.prototype.createCert = function(inCN, inName, inCA) {
         console.error("Such a certificate already exists.");
         return;
     }
-    var keyFile = path.join(certDir, 'certificate.key');
-    var reqFile = path.join(certDir, 'certificate.req');
-    var cerFile = path.join(certDir, 'certificate.cer');
+    var keyFile = path.join(certDir, inName + '.key');
+    var reqFile = path.join(certDir, inName + '.req');
+    var cerFile = path.join(certDir, inName + '.cer');
     var serialFile = path.join(certDir, 'serial');
     var caDir = path.join(this.caDir, inCA);
-    var caKeyFile = path.join(caDir, 'authority.key');
-    var caCertFile = path.join(caDir, 'authority.cer');
+    var caKeyFile = path.join(caDir, inCA + '.key');
+    var caCertFile = path.join(caDir, inCA + '.cer');
     fs.mkdirSync(certDir);
     exec('openssl genrsa -out ' + keyFile + ' 2048', function(err) {
         exec('openssl req -new -key ' + keyFile + ' -out ' + reqFile + ' -subj /CN="' + inCN + '"', function(err) {
