@@ -1,6 +1,5 @@
 var fs = require('fs');
 var path = require('path');
-var sys = require('sys')
 var exec = require('child_process').exec;
 var rmdir = require('rimraf');
 
@@ -73,7 +72,7 @@ CertManager.prototype.deleteAuthority = function(inName) {
 
 
 CertManager.prototype.listCerts = function() {
-    fs.readdir(this.caDir, function(err, files) {
+    fs.readdir(this.certDir, function(err, files) {
         if(!err && files && files.length > 0) {
             console.log('Available certificates:');
             files.forEach(function(cert) {

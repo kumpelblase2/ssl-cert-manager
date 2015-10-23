@@ -1,6 +1,6 @@
 {
   "name": "ssl-manager",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Manage your ssl certificates",
   "main": "index.js",
   "repository": "https://github.com/kumpelblase2/ssl-cert-manager",
