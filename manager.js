@@ -51,7 +51,7 @@ CertManager.prototype.createAuthority = function(inCN, inName) {
     var keyFile = path.join(caDir, inName + '.key');
     var cerFile = path.join(caDir, inName + '.cer');
     fs.mkdirSync(caDir);
-    exec('openssl genrsa -out ' + keyFile + ' 2048', function(err) {
+    exec('openssl genrsa -out ' + keyFile + ' 4096', function(err) {
         exec('openssl req -x509 -new -key ' + keyFile + ' -out ' + cerFile + ' -days 730 -subj /CN="' + inCN + '"', function(err) {
             console.log("Created authority " + inName);
         });
@@ -99,7 +99,7 @@ CertManager.prototype.createCert = function(inCN, inName, inCA) {
     var caKeyFile = path.join(caDir, inCA + '.key');
     var caCertFile = path.join(caDir, inCA + '.cer');
     fs.mkdirSync(certDir);
-    exec('openssl genrsa -out ' + keyFile + ' 2048', function(err) {
+    exec('openssl genrsa -out ' + keyFile + ' 4096', function(err) {
         exec('openssl req -new -key ' + keyFile + ' -out ' + reqFile + ' -subj /CN="' + inCN + '"', function(err) {
             exec('openssl x509 -req -in ' + reqFile + ' -out ' + cerFile + ' -CAkey ' + caKeyFile + ' -CA ' + caCertFile + ' -days 365 -CAcreateserial -CAserial ' + serialFile, function(err) {
                 console.log("Created certificate " + inName);
